@@ -53,8 +53,6 @@
       nameservers = [ "127.0.0.1" "::1" ];
     };
 
-    services.openssh.enable = true;
-
     # On met le système en FR
     console.keyMap = console_keymap;
     i18n.defaultLocale = locale;
@@ -62,6 +60,10 @@
 
     users = {
       mutableUsers = false;
+
+      # Désactive l'utilisateur root
+      users.root.hashedPassword = "*";
+
       users."${user}" = {
         isNormalUser = true;
         hashedPassword = password;
@@ -74,6 +76,13 @@
 
     # Enable GPU acceleration
     hardware.raspberry-pi."4".fkms-3d.enable = true;
+
+    # Configuration du serveur ssh
+    services.openssh = {
+      enable = true;
+      logLevel = "VERBOSE";
+      permitRootLogin = "no";
+    };
 
     # Configuration du serveur DNS
     services.unbound = {
@@ -104,7 +113,7 @@
           unwanted-reply-threshold = 10000;
 
           # Emplacement du fichier contenant les infos sur les serveurs DNS roots
-	  root-hints = "/etc/unbound/root.hints";
+          root-hints = "/etc/unbound/root.hints";
         };
       };
     };
