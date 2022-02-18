@@ -6,7 +6,7 @@
     password = "$6$vBUAgT5QDFSxIMzi$rpL5SGF41P6tIDBjYWi5W0shKo.DrsWnZ8V9UawG6YRgOiy8b7E.R1rIfjZBi6TF6l6HR3wFQPIeauqXLKUui/";
 
     interface = "eth0";
-    hostname = "pi_server";
+    hostname = "piserver";
     ipv4_network = "192.168.1.0";
     ipv4_address = "192.168.1.202";
     ipv4_gateway = "192.168.1.254";
