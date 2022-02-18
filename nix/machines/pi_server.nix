@@ -133,6 +133,7 @@
       bind
       git
       gotop
+      nmap
       vim
     ];
 
