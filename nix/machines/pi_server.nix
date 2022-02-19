@@ -10,6 +10,8 @@
     ipv4_network = "192.168.1.0";
     ipv4_address = "192.168.1.202";
     ipv4_gateway = "192.168.1.254";
+    ipv6_network = "2a01:e0a:5ac:f010::";
+    ipv6_address = "2a01:e0a:5ac:f010:fcf8:a089:fa3c:2582";
 
     console_keymap = "fr";
     locale = "fr_FR.UTF-8";
@@ -30,18 +32,36 @@
       };
     };
 
+    # Augmente la taille du buffer des requêtes UDP
+    # Cela évite de perdre des messages lors des pics de trafic
+    boot.kernel.sysctl = { "net.core.rmem_max" = 1048576; };
+
     networking = {
       hostName = hostname;
 
       dhcpcd.enable = false;
 
-      # Assigne une adresse statique
+      firewall = {
+        # Autorise les connexions entrantes vers le serveur DNS
+        allowedUDPPorts = [ 53 ];
+        allowedTCPPorts = [ 53 ];
+      };
+
       interfaces."${interface}" = {
+        # Assigne une adresse ipv4 statique
         useDHCP = false;  
         ipv4.addresses = [
           {
             address = ipv4_address;
             prefixLength = 24;
+          }
+        ];
+
+        # Assigne une adresse ipv6 statique
+        ipv6.addresses = [
+          {
+            address = ipv6_address;
+            prefixLength = 64;
           }
         ];
       };
@@ -92,25 +112,60 @@
           verbosity = 1;
           use-syslog = true;
 
-          interface = [ "127.0.0.1" "::1" ];
+          interface = [ ipv4_address ipv6_address "127.0.0.1" "::1" ];
           port = 53;
 
           # Liste les ordinateurs autorisés à effectuer des requêtes DNS
-          access-control = [ "${ipv4_network}/24 allow" ];
+          access-control = [
+            "127.0.0.1 allow"
+            "::1 allow"
+            "${ipv4_network}/24 allow"
+            "${ipv6_network}/64 allow"
+          ];
           do-ip4 = true;
           do-ip6 = true;
           do-udp = true;
           do-tcp = true;
 
-          hide-identity = false;
+          hide-identity = true;
           hide-version = true;
           harden-glue = true;
-
-          so-rcvbuf = "1m";
-          # Empêche de renvoyer en réponse les adresses du réseau privé
-          private-address = [ "${ipv4_network}/24" ];
+          harden-dnssec-stripped = true;
+          use-caps-for-id = true;
 
           unwanted-reply-threshold = 10000;
+
+          # Paramètres de performance
+          num-threads = 4;
+          msg-cache-slabs = 8;
+          rrset-cache-slabs = 8;
+          infra-cache-slabs = 8;
+          key-cache-slabs = 8;
+          rrset-cache-size = "100m";
+          msg-cache-size = "50m";
+
+          prefetch = true;
+
+          # Empêche de renvoyer en réponse les adresses du réseau privé
+          private-address = [
+            "10.0.0.0/8"
+            "172.16.0.0/12"
+            "192.168.0.0/16"
+            "${ipv6_network}/64"
+          ];
+
+          # Autorise ce domaine à contenir des adresses du réseau privé
+          private-domain = "lan";
+
+          local-zone = "lan. static";
+          local-data = [
+            "\"raspberry.lan. IN A ${ipv4_address}\""
+            "\"raspberry.lan. IN AAAA ${ipv6_address}\""
+          ];
+          local-data-ptr = [
+            "\"${ipv4_address} raspberry.lan\""
+            "\"${ipv6_address} raspberry.lan\""
+          ];
 
           # Emplacement du fichier contenant les infos sur les serveurs DNS roots
           root-hints = "/etc/unbound/root.hints";
