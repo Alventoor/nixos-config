@@ -104,6 +104,10 @@
       permitRootLogin = "no";
     };
 
+    # Active le service fail2ban
+    # Une protection du service ssh est fournie par défaut par nix
+    services.fail2ban.enable = true;
+
     # Configuration du serveur DNS
     services.unbound = {
       enable = true;
