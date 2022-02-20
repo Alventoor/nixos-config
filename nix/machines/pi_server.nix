@@ -203,6 +203,9 @@
       gotop
       nmap
       vim
+      moreutils
+      libraspberrypi
+      raspberrypi-eeprom
     ];
 
     # Configuration des paquets
