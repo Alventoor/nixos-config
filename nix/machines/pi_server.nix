@@ -216,6 +216,15 @@
       set tabsize 2
     '';
 
+    # git
+    programs.git.config = {
+      init.defaultBranch = "main";
+      user = {
+        name = user;
+        email = "julienm99@tutamail.com";
+      };
+    };
+
     # Nettoie les anciens paquets toutes les 2 semaines
     nix.gc.automatic = true;
     nix.gc.dates = "2weeks";
