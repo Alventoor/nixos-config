@@ -195,6 +195,22 @@
       };
     };
 
+    # Service chargé de relever la température du processeur toutes les heures
+    systemd.services.temp-monitoring = {
+      serviceConfig.Type = "oneshot";
+      path = [ pkgs.util-linux pkgs.libraspberrypi ];
+      script = "vcgencmd measure_temp | logger";
+    };
+
+    systemd.timers.temp-monitoring = {
+      wantedBy = [ "timers.target" ];
+      partOf = [ "temp-monitoring.service" ];
+      timerConfig = {
+        OnCalendar = "*-*-* *:*/30:00";
+        Unit = "temp-monitoring.service";
+      };
+    };
+
     # Installation manuelle des paquets
     environment.systemPackages = with pkgs; [
       # Pour la commande nslookup
