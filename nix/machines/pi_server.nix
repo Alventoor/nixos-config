@@ -179,6 +179,7 @@
 
     # Service chargé de mettre automatiquement à jour root.hints
     systemd.services.update-roothints = {
+      description = "Update root.hints file for Unbound";
       serviceConfig.Type = "oneshot";
       after = [ "network.target" ];
       path = [ pkgs.curl ];
@@ -190,6 +191,7 @@
 
     # Timeur chargé d'exécuter tous les mois le service au-dessus
     systemd.timers.update-roothints = {
+      description = "Update Unbound root.hints file every six months";
       wantedBy = [ "timers.target" ];
       partOf = [ "update-roothints.service" ];
       timerConfig = { 
@@ -200,12 +202,14 @@
 
     # Service chargé de relever la température du processeur toutes les heures
     systemd.services.temp-monitoring = {
+      description = "Log the CPU temperature";
       serviceConfig.Type = "oneshot";
       path = [ pkgs.util-linux pkgs.libraspberrypi ];
       script = "vcgencmd measure_temp | logger";
     };
 
     systemd.timers.temp-monitoring = {
+      description = "Log the CPU temperature every 30 minutes";
       wantedBy = [ "timers.target" ];
       partOf = [ "temp-monitoring.service" ];
       timerConfig = {
