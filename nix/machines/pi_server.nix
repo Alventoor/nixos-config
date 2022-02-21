@@ -18,10 +18,26 @@
     time_zone = "Europe/Paris";
 
   in {
-    # On utilise Nix unstable pour le support des flakes
+    # Active la mise à jour automatique du système
+    system.autoUpgrade = {
+      enable = true;
+      allowReboot = true;
+      flags = [ "--update-input" "nixpkgs" "--update-input" "nixos-hardware" "--commit-lock-file" ];
+      dates = "*-*-15,28 03:30:00";
+    };
+
+    # Paramètres du store
     nix = {
+      # On utilise Nix unstable pour le support des flakes
       package = pkgs.nixUnstable;
       extraOptions = "experimental-features = nix-command flakes";
+
+      # Nettoie les anciens paquets après chaque upgrade
+      gc = {
+        automatic = true;
+        dates = "*-*-15,28 04:30:00";
+        options = "--delete-older-than 30d";
+      };
     };
 
     fileSystems = {
@@ -247,8 +263,4 @@
         email = "julienm99@tutamail.com";
       };
     };
-
-    # Nettoie les anciens paquets toutes les 2 semaines
-    nix.gc.automatic = true;
-    nix.gc.dates = "2weeks";
   }
