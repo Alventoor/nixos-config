@@ -206,7 +206,7 @@
       wantedBy = [ "timers.target" ];
       partOf = [ "temp-monitoring.service" ];
       timerConfig = {
-        OnCalendar = "*-*-* *:*/30:00";
+        OnCalendar = "*-*-* *:00/30:00";
         Unit = "temp-monitoring.service";
       };
     };
