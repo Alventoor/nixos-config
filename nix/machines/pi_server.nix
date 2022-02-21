@@ -182,7 +182,10 @@
       serviceConfig.Type = "oneshot";
       after = [ "network.target" ];
       path = [ pkgs.curl ];
-      script = "curl -o /etc/unbound/root.hints https://www.internic.net/domain/named.cache";
+      script = ''
+        curl -o /etc/unbound/root.hints https://www.internic.net/domain/named.cache
+        systemctl restart unbound
+      '';
     };
 
     # Timeur chargé d'exécuter tous les mois le service au-dessus
@@ -190,7 +193,7 @@
       wantedBy = [ "timers.target" ];
       partOf = [ "update-roothints.service" ];
       timerConfig = { 
-        OnCalendar = "monthly";
+        OnCalendar = "*-01,07-01 03:30:00";
         Unit = "update-roothints.service";
       };
     };
