@@ -220,8 +220,8 @@
     systemd.services.temp-monitoring = {
       description = "Log the CPU temperature";
       serviceConfig.Type = "oneshot";
-      path = [ pkgs.util-linux pkgs.libraspberrypi ];
-      script = "vcgencmd measure_temp | logger";
+      path = [ pkgs.libraspberrypi ];
+      script = "vcgencmd measure_temp";
     };
 
     systemd.timers.temp-monitoring = {
