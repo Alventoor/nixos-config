@@ -171,7 +171,9 @@
             "10.0.0.0/8"
             "172.16.0.0/12"
             "192.168.0.0/16"
-            "${ipv6_network}/64"
+            "169.254.0.0/16"
+            "fd00::/8"
+            "fe80::/10"
           ];
 
           # Autorise ce domaine à contenir des adresses du réseau privé
