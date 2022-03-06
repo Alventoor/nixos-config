@@ -13,6 +13,8 @@
     ipv6_network = "2a01:e0a:5ac:f010::";
     ipv6_address = "2a01:e0a:5ac:f010:fcf8:a089:fa3c:2582";
 
+    domain_name = "jl-mc.duckdns.org";
+
     console_keymap = "fr";
     locale = "fr_FR.UTF-8";
     time_zone = "Europe/Paris";
@@ -58,9 +60,10 @@
       dhcpcd.enable = false;
 
       firewall = {
-        # Autorise les connexions entrantes vers le serveur DNS
-        allowedUDPPorts = [ 53 ];
-        allowedTCPPorts = [ 53 ];
+        # Autorise les connexions entrantes vers les divers services hébergés.
+        # (DNS, site web)
+        allowedUDPPorts = [ 53 80 443 ];
+        allowedTCPPorts = [ 53 80 443 ];
       };
 
       interfaces."${interface}" = {
@@ -119,10 +122,6 @@
       logLevel = "VERBOSE";
       permitRootLogin = "no";
     };
-
-    # Active le service fail2ban
-    # Une protection du service ssh est fournie par défaut par nix
-    services.fail2ban.enable = true;
 
     # Configuration du serveur DNS
     services.unbound = {
@@ -234,6 +233,110 @@
         OnCalendar = "*-*-* *:00/30:00";
         Unit = "temp-monitoring.service";
       };
+    };
+
+    # Mise en place du service Vaultwarden
+    services.vaultwarden = {
+      enable = true;
+
+      config = {
+        signupsAllowed = false;
+
+        # On change le port par défaut pour éviter des conflits
+        rocketPort = 8812;
+        rocketLog = "critical";
+
+        websocketEnabled = true;
+        websocketAddress = "0.0.0.0";
+        websocketPort = 3012;
+
+        domain = "https://vaultwarden.${domain_name}";
+      };
+    };
+
+    # Génération des certificats de sécurités pour le nom de domaine
+    security.acme = {
+      acceptTerms = true;
+      defaults.email = "julienm99@tutamail.com";
+
+      certs."${domain_name}" = {
+        group = "vaultwarden";
+
+        extraDomainNames = [ "vaultwarden.${domain_name}" ];
+
+        dnsProvider = "duckdns";
+        webroot = null;
+        credentialsFile = "/home/alventoor/.dots/nix/secrets/duckdns";
+      };
+    };
+
+    # Mise en place d'un reverse proxy chargé de rediriger les connexions entrantes
+    # ver le serveur web
+    users.users.nginx.extraGroups = [ "vaultwarden" ];
+    services.nginx = {
+      enable = true;
+
+      recommendedGzipSettings = true;
+      recommendedOptimisation = true;
+      recommendedProxySettings = true;
+      recommendedTlsSettings = true;
+
+      # Empêche d'accéder au site web depuis les adresses non désirées
+      virtualHosts."${domain_name}" = {
+        default = true;
+
+        forceSSL = true;
+        enableACME = true;
+
+        locations."/".return = "403";
+      };
+
+      # Redirige les utilisateurs vers le service vaultwarden
+      virtualHosts."vaultwarden.${domain_name}" = {
+        forceSSL = true;
+        enableACME = true;
+
+        locations."/" = {
+          proxyPass = "http://localhost:8812";
+          proxyWebsockets = true;
+        };
+        locations."/notifications/hub" = {
+          proxyPass = "http://localhost:3012";
+          proxyWebsockets = true;
+        };
+        locations."/notifications/hub/negotiate" = {
+          proxyPass = "http://localhost:8812";
+          proxyWebsockets = true;
+        };
+      };
+    };
+
+    # Protection fail2ban pour les services auto-hébergés
+    # Une protection du service ssh est fournie par défaut par nix
+    services.fail2ban = {
+      enable = true;
+
+      # Protection du service vaultwarden
+      jails = {
+        vaultwarden = ''
+          enabled = true
+          port = 80,443,881
+          filter = vaultwarden
+          journalmatch = _SYSTEMD_UNIT=vaultwarden.service + _COMM=vaultwarden
+        '';
+      };
+    };
+
+    # Filtre fail2ban pour le service vaultwarden
+    environment.etc."fail2ban/filter.d/vaultwarden.local" = {
+      text = ''
+        [INCLUDES]
+        before = common.conf
+
+        [Definition]
+        failregex = ^.*Username or password is incorrect\. Try again\. IP: <ADDR>\. Username:.*$
+        ignoreregex =
+      '';
     };
 
     # Installation manuelle des paquets
