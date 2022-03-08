@@ -1,0 +1,7 @@
+keys:
+  - &piserver age1kk8w8a9ran066zcskz4wt24n33sl3dwmdyflj7nkc3wvdwcj5qxqhauayc
+creation_rules:
+  - path_regex: machines/piserver/secrets.yaml$
+    key_groups:
+    - age:
+      - *piserver

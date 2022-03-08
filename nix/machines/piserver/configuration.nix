@@ -20,11 +20,20 @@
     time_zone = "Europe/Paris";
 
   in {
+    # Configuration des secrets
+    sops = {
+      defaultSopsFile = ./secrets.yaml;
+      age.sshKeyPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
+
+      secrets.duckdns_credentials = {};
+    };
+
+
     # Active la mise à jour automatique du système
     system.autoUpgrade = {
       enable = true;
       allowReboot = true;
-      flags = [ "--update-input" "nixpkgs" "--update-input" "nixos-hardware" "--commit-lock-file" ];
+      flags = [ "--update-input" "nixpkgs" "--update-input" "sops-nix" "--update-input" "nixos-hardware" "--commit-lock-file" ];
       dates = "*-*-15,28 03:30:00";
     };
 
@@ -266,7 +275,7 @@
 
         dnsProvider = "duckdns";
         webroot = null;
-        credentialsFile = "/home/alventoor/.dots/nix/secrets/duckdns";
+        credentialsFile = config.sops.secrets.duckdns_credentials.path;
       };
     };
 
