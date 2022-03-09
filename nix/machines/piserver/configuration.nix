@@ -26,6 +26,7 @@
       age.sshKeyPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
 
       secrets.duckdns_credentials = {};
+      secrets.vaultwarden_env = {};
     };
 
 
@@ -261,6 +262,7 @@
 
         domain = "https://vaultwarden.${domain_name}";
       };
+      environmentFile = config.sops.secrets.vaultwarden_env.path;
     };
 
     # Génération des certificats de sécurités pour le nom de domaine
@@ -329,23 +331,43 @@
       jails = {
         vaultwarden = ''
           enabled = true
-          port = 80,443,881
+          port = 80,443
           filter = vaultwarden
+          journalmatch = _SYSTEMD_UNIT=vaultwarden.service + _COMM=vaultwarden
+        '';
+
+        vaultwarden-admin = ''
+          enabled = true
+          port = 80,443
+          filter = vaultwarden-admin
           journalmatch = _SYSTEMD_UNIT=vaultwarden.service + _COMM=vaultwarden
         '';
       };
     };
 
-    # Filtre fail2ban pour le service vaultwarden
-    environment.etc."fail2ban/filter.d/vaultwarden.local" = {
-      text = ''
-        [INCLUDES]
-        before = common.conf
+    # Filtres fail2ban pour le service vaultwarden
+    environment.etc = {
+      "fail2ban/filter.d/vaultwarden.local" = {
+        text = ''
+          [INCLUDES]
+          before = common.conf
 
-        [Definition]
-        failregex = ^.*Username or password is incorrect\. Try again\. IP: <ADDR>\. Username:.*$
-        ignoreregex =
-      '';
+          [Definition]
+          failregex = ^.*Username or password is incorrect\. Try again\. IP: <ADDR>\. Username:.*$
+          ignoreregex =
+        '';
+      };
+
+      "fail2ban/filter.d/vaultwarden-admin.local" = {
+        text = ''
+          [INCLUDES]
+          before = common.conf
+
+          [Definition]
+          failregex = ^.*Invalid admin token\. IP: <ADDR>.*$
+          ignoreregex =
+        '';
+      };
     };
 
     # Installation manuelle des paquets
