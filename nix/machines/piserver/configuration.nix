@@ -351,7 +351,6 @@
     # Installation manuelle des paquets
     environment.systemPackages = with pkgs; [
       git
-      moreutils
       libraspberrypi
       raspberrypi-eeprom
     ];
