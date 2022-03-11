@@ -15,11 +15,12 @@
 
     domain_name = "jl-mc.duckdns.org";
 
-    console_keymap = "fr";
-    locale = "fr_FR.UTF-8";
-    time_zone = "Europe/Paris";
-
   in {
+    imports = [
+      ../../modules/base.nix
+      ../../modules/sshd.nix
+    ];
+
     # Configuration des secrets
     sops = {
       defaultSopsFile = ./secrets.yaml;
@@ -38,18 +39,11 @@
       dates = "*-*-15,28 03:30:00";
     };
 
-    # Paramètres du store
-    nix = {
-      # On utilise Nix unstable pour le support des flakes
-      package = pkgs.nixUnstable;
-      extraOptions = "experimental-features = nix-command flakes";
-
-      # Nettoie les anciens paquets après chaque upgrade
-      gc = {
-        automatic = true;
-        dates = "*-*-15,28 04:30:00";
-        options = "--delete-older-than 30d";
-      };
+    # Nettoie les anciens paquets après chaque upgrade
+    nix.gc = {
+      automatic = true;
+      dates = "*-*-15,28 04:30:00";
+      options = "--delete-older-than 30d";
     };
 
     fileSystems = {
@@ -102,11 +96,6 @@
       nameservers = [ "127.0.0.1" "::1" ];
     };
 
-    # On met le système en FR
-    console.keyMap = console_keymap;
-    i18n.defaultLocale = locale;
-    time.timeZone = time_zone;
-
     users = {
       mutableUsers = false;
 
@@ -120,18 +109,8 @@
       };
     };
 
-    # Configure le profil bash
-    programs.bash.shellInit = "HISTCONTROL=ignoredups";
-
     # Enable GPU acceleration
     hardware.raspberry-pi."4".fkms-3d.enable = true;
-
-    # Configuration du serveur ssh
-    services.openssh = {
-      enable = true;
-      logLevel = "VERBOSE";
-      permitRootLogin = "no";
-    };
 
     # Configuration du serveur DNS
     services.unbound = {
@@ -323,7 +302,6 @@
     };
 
     # Protection fail2ban pour les services auto-hébergés
-    # Une protection du service ssh est fournie par défaut par nix
     services.fail2ban = {
       enable = true;
 
@@ -372,24 +350,13 @@
 
     # Installation manuelle des paquets
     environment.systemPackages = with pkgs; [
-      # Pour la commande nslookup
-      bind
       git
-      gotop
-      nmap
-      vim
       moreutils
       libraspberrypi
       raspberrypi-eeprom
     ];
 
     # Configuration des paquets
-
-    # nano
-    programs.nano.nanorc = ''
-      set tabstospaces
-      set tabsize 2
-    '';
 
     # git
     programs.git.config = {
