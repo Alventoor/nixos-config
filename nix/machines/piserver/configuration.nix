@@ -35,6 +35,8 @@
     system.autoUpgrade = {
       enable = true;
       allowReboot = true;
+
+      flake = "path:/etc/nixos";
       flags = [ "--update-input" "nixpkgs" "--update-input" "sops-nix" "--update-input" "nixos-hardware" "--commit-lock-file" ];
       dates = "*-*-15,28 03:30:00";
     };
@@ -42,7 +44,7 @@
     # Nettoie les anciens paquets après chaque upgrade
     nix.gc = {
       automatic = true;
-      dates = "*-*-15,28 04:30:00";
+      dates = "*-*-15,28 05:30:00";
       options = "--delete-older-than 30d";
     };
 
