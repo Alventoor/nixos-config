@@ -26,7 +26,7 @@ in {
     nmap
     # Secrets
     sops
-    ssh-to-pgp
+    ssh-to-age
   ];
 
   # Configuration des paquets
