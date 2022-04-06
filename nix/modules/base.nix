@@ -24,6 +24,9 @@ in {
     # Network
     bind # Pour la commande nslookup
     nmap
+    # Secrets
+    sops
+    ssh-to-pgp
   ];
 
   # Configuration des paquets
