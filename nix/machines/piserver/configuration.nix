@@ -3,7 +3,6 @@
 
   let
     user = "alventoor";
-    password = "$6$vBUAgT5QDFSxIMzi$rpL5SGF41P6tIDBjYWi5W0shKo.DrsWnZ8V9UawG6YRgOiy8b7E.R1rIfjZBi6TF6l6HR3wFQPIeauqXLKUui/";
 
     interface = "eth0";
     hostname = "piserver";
@@ -28,6 +27,7 @@
 
       secrets.duckdns_credentials = {};
       secrets.vaultwarden_env = {};
+      secrets.alventoor_password.neededForUsers = true;
     };
 
 
@@ -106,7 +106,7 @@
 
       users."${user}" = {
         isNormalUser = true;
-        hashedPassword = password;
+        passwordFile = config.sops.secrets.alventoor_password.path;
         extraGroups = [ "wheel" ];
       };
     };
