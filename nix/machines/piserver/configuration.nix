@@ -30,15 +30,18 @@
       secrets.alventoor_password.neededForUsers = true;
     };
 
+    system = {
+      # Active la mise à jour automatique du système
+      autoUpgrade = {
+        enable = true;
+        allowReboot = true;
 
-    # Active la mise à jour automatique du système
-    system.autoUpgrade = {
-      enable = true;
-      allowReboot = true;
+        flake = "path:/etc/nixos";
+        flags = [ "--update-input" "nixpkgs" "--update-input" "sops-nix" "--update-input" "nixos-hardware" "--commit-lock-file" ];
+        dates = "*-*-15,28 03:30:00";
+      };
 
-      flake = "path:/etc/nixos";
-      flags = [ "--update-input" "nixpkgs" "--update-input" "sops-nix" "--update-input" "nixos-hardware" "--commit-lock-file" ];
-      dates = "*-*-15,28 03:30:00";
+      stateVersion = "22.05";
     };
 
     # Nettoie les anciens paquets après chaque upgrade
