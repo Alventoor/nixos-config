@@ -1,0 +1,18 @@
+name: automerge-flake-lock
+
+on:
+  pull_request_target:
+    types:
+      - opened
+      - labeled
+      - unlabeled
+
+jobs:
+  automerge:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: reitermarkus/automerge@v2
+        with:
+          token: ${{ secrets.GH_TOKEN_FLAKE_UPDATES }}
+          merge-method: rebase
+          required-labels: automerge
