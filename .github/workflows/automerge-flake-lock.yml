@@ -3,7 +3,6 @@ name: automerge-flake-lock
 on:
   pull_request_target:
     types:
-      - opened
       - labeled
       - unlabeled
 
