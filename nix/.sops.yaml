@@ -1,7 +1,12 @@
 keys:
   - &piserver age1kk8w8a9ran066zcskz4wt24n33sl3dwmdyflj7nkc3wvdwcj5qxqhauayc
+  - &quark age1j2jhkdy0z07gsu62lvc3nsyg57mavzuwx7qs8wjg2fnpxx8dyu2s3y373r
 creation_rules:
   - path_regex: machines/piserver/secrets.yaml$
     key_groups:
     - age:
       - *piserver
+  - path_regex: machines/quark/secrets.yaml$
+    key_groups:
+    - age:
+      - *quark
