@@ -12,6 +12,10 @@ in {
     extraOptions = "experimental-features = nix-command flakes";
   };
 
+  systemd = {
+    oomd.enable = false;
+  };
+
   console.keyMap = console_keymap;
   i18n.defaultLocale = locale;
   time.timeZone = time_zone;
