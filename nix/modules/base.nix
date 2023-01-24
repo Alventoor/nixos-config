@@ -21,17 +21,26 @@ in {
   time.timeZone = time_zone;
 
   # Installation des paquets
-  environment.systemPackages = with pkgs; [
-    # System
-    gotop
-    vim
-    # Network
-    bind # Pour la commande nslookup
-    nmap
-    # Secrets
-    sops
-    ssh-to-age
-  ];
+  environment = {
+    sessionVariables = {
+      XDG_CACHE_HOME = "\${HOME}/.cache";
+      XDG_CONFIG_HOME = "\${HOME}/.config";
+      XDG_DATA_HOME = "\${HOME}/.local/share";
+      XDG_STATE_HOME = "\${HOME}/.local/state";
+    };
+
+    systemPackages = with pkgs; [
+      # System
+      gotop
+      vim
+      # Network
+      bind # Pour la commande nslookup
+      nmap
+      # Secrets
+      sops
+      ssh-to-age
+    ];
+  };
 
   # Configuration des paquets
 
