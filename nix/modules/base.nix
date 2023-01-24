@@ -31,7 +31,7 @@ in {
 
   # Configuration des paquets
 
-  programs.bash.shellInit = "HISTCONTROL=ignoredups";
+  programs.bash.interactiveShellInit = "HISTCONTROL=ignoredups";
 
   programs.nano.nanorc = ''
     set tabstospaces
