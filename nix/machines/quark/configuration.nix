@@ -70,10 +70,13 @@ in {
   };
 
   services = {
+    journald.extraConfig = "SystemMaxUse=1G";
+
     xserver = {
       displayManager.sddm.enable = true;
       desktopManager.plasma5 = {
         enable = true;
+
         excludePackages = with pkgs.libsForQt5; [
           oxygen
         ];
