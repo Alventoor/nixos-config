@@ -121,6 +121,7 @@ in {
     jetbrains.idea-community
     rustc
     cargo
+    qemu
   ];
 
   fonts.fonts = with pkgs; [
