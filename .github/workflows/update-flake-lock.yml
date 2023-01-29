@@ -19,6 +19,7 @@ jobs:
       - name: Update flake.lock
         uses: DeterminateSystems/update-flake-lock@v14
         with:
+          inputs: nixpkgs sops-nix nixos-hardware
           token: ${{ secrets.GH_TOKEN_FLAKE_UPDATES }}
           pr-title: "Update flake.lock"
           pr-labels: |
