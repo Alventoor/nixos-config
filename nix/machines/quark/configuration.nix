@@ -29,11 +29,23 @@ in {
   boot = {
     kernelPackages = pkgs.linuxPackages_latest;
 
-    loader.grub = {
-      enable = true;
-      efiSupport = true;
-      useOSProber = true;
-      device = "nodev";
+    loader = {
+      efi.canTouchEfiVariables = true;
+
+      grub = {
+        enable = true;
+        efiSupport = true;
+        useOSProber = true;
+
+        # mirroredBoots allows to install grub to another path than /boot
+        mirroredBoots = [
+          {
+            devices = [ "nodev" ];
+            path = "/nix/state/bootloader";
+            efiSysMountPoint = "/efi";
+          }
+        ];
+      };
     };
   };
 

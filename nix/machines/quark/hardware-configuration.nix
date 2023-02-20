@@ -19,7 +19,7 @@
       options = [ "defaults" "size=4G" "mode=755" ];
     };
 
-  fileSystems."/boot" =
+  fileSystems."/efi" =
     { device = "/dev/disk/by-uuid/605D-E6AB";
       fsType = "vfat";
     };
