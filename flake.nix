@@ -5,7 +5,7 @@
     sops-nix.url = github:Mic92/sops-nix;
     nixos-hardware.url = github:NixOS/nixos-hardware/master;
 
-    private.url = path:/etc/nixos/nix/private;
+    private.url = git+file:/etc/nixos/nix/private;
   };
 
   outputs = { self, nixpkgs, sops-nix, nixos-hardware, private }: {
