@@ -7,6 +7,7 @@
 let
   hostname = "quark";
   user = "alventoor";
+  user_extraGroups = [ "minecraft" "gaming" ];
 
 in {
   imports =
@@ -15,6 +16,7 @@ in {
       ../../modules/base.nix
       ../../modules/head.nix
       ../../modules/firefox.nix
+      ../../modules/minecraft-server.nix
     ];
 
   sops = {
@@ -24,6 +26,12 @@ in {
     secrets.alventoor_password = {
       neededForUsers = true;
     };
+  };
+
+  services.minecraft-server = {
+    enable = true;
+    bindFolder = true;
+    dataDir = "/home/games/minecraft-server";
   };
 
   boot = {
@@ -65,9 +73,13 @@ in {
   users = {
     mutableUsers = false;
 
+    groups = {
+      gaming = {};
+    };
+
     users."${user}" = {
       isNormalUser = true;
-      extraGroups = [ "wheel" ]; # Enable ‘sudo’ for the user.      
+      extraGroups = [ "wheel" ] ++ user_extraGroups;
       passwordFile = config.sops.secrets.alventoor_password.path;
     };
   };
