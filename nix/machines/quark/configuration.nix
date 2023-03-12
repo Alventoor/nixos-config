@@ -101,6 +101,7 @@ in {
   programs = {
     # Don't work if enabled from environment.systemPackages
     partition-manager.enable = true;
+    java.enable = true;
 
     steam = {
       enable = true;
