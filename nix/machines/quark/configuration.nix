@@ -28,13 +28,6 @@ in {
     };
   };
 
-  services.minecraft-server = {
-    enable = true;
-    bindFolder = true;
-    dataDir = "/home/games/minecraft-server";
-    admins = [ user ];
-  };
-
   boot = {
     kernelPackages = pkgs.linuxPackages_latest;
 
@@ -95,6 +88,7 @@ in {
   };
 
   services = {
+    fstrim.enable = true;
     journald.extraConfig = "SystemMaxUse=1G";
 
     xserver = {
@@ -108,7 +102,12 @@ in {
       };
     };
 
-    fstrim.enable = true;
+    minecraft-server = {
+      enable = true;
+      bindFolder = true;
+      dataDir = "/home/games/minecraft-server";
+      admins = [ user ];
+    };
   };
 
   programs = {
