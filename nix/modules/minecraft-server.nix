@@ -4,6 +4,10 @@ let
   cfg = config.services.minecraft-server;
 
   defaultDataDir = "/srv/minecraft-server";
+
+  adminsExtraGroup = builtins.map (x:
+    { name = "${x}"; value = { extraGroups = [ "minecraft" ]; }; }
+  ) cfg.admins;
 in {
   options = {
     services.minecraft-server = {
@@ -14,6 +18,15 @@ in {
           If enabled, bind the dataDir folder to the server's view of the file system.
           It's necessary if you want to use a directory located under /home as the service
           can't directly read inside.
+        '';
+      };
+
+      admins = lib.mkOption {
+        type = lib.types.listOf lib.types.str;
+        default = [];
+        description = lib.mdDoc ''
+          The users with read and write access to the server config files.
+          These users will be added to the "minecraft" group.
         '';
       };
     };
@@ -50,7 +63,12 @@ in {
       };
     };
 
-    # Allow users in minecraft group to access server config
-    users.users.minecraft.homeMode = "770";
+    users.users = lib.mkMerge [
+      # Allow users in minecraft group to access server folder
+      { minecraft.homeMode = "770";
+      }
+
+      (builtins.listToAttrs adminsExtraGroup)
+    ];
   };
 }

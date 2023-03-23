@@ -7,7 +7,7 @@
 let
   hostname = "quark";
   user = "alventoor";
-  user_extraGroups = [ "minecraft" "gaming" ];
+  user_extraGroups = [ "gaming" ];
 
 in {
   imports =
@@ -32,6 +32,7 @@ in {
     enable = true;
     bindFolder = true;
     dataDir = "/home/games/minecraft-server";
+    admins = [ user ];
   };
 
   boot = {
