@@ -2,8 +2,11 @@
 {
   services.openssh = {
     enable = true;
-    logLevel = "VERBOSE";
-    permitRootLogin = "no";
+
+    settings = {
+      LogLevel = "VERBOSE";
+      PermitRootLogin = "no";
+    };
   };
 
   # Activation de la protection fail2ban
