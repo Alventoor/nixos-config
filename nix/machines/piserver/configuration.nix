@@ -114,9 +114,6 @@
       };
     };
 
-    # Enable GPU acceleration
-    hardware.raspberry-pi."4".fkms-3d.enable = true;
-
     # Configuration du serveur DNS
     services.unbound = {
       enable = true;
