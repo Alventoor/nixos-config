@@ -74,7 +74,7 @@ in {
     users."${user}" = {
       isNormalUser = true;
       extraGroups = [ "wheel" ] ++ user_extraGroups;
-      passwordFile = config.sops.secrets.alventoor_password.path;
+      hashedPasswordFile = config.sops.secrets.alventoor_password.path;
     };
   };
 
