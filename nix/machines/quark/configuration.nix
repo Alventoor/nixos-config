@@ -7,7 +7,7 @@
 let
   hostname = "quark";
   user = "alventoor";
-  user_extraGroups = [ "gaming" ];
+  user_extraGroups = [ "gaming" "wireshark" ];
 
 in {
   imports =
@@ -109,6 +109,11 @@ in {
     partition-manager.enable = true;
     java.enable = true;
 
+    wireshark = {
+      enable = true;
+      package = pkgs.wireshark-qt;
+    };
+
     steam = {
       enable = true;
       remotePlay.openFirewall = true;
@@ -123,7 +128,6 @@ in {
 
     systemPackages = with pkgs; [
       helvum
-      wireshark
       # plasma
       ark
       kate
