@@ -93,13 +93,7 @@ in {
 
     xserver = {
       displayManager.sddm.enable = true;
-      desktopManager.plasma5 = {
-        enable = true;
-
-        excludePackages = with pkgs.libsForQt5; [
-          oxygen
-        ];
-      };
+      desktopManager.plasma5.enable = true;
     };
 
     minecraft-server = {
@@ -121,36 +115,43 @@ in {
     };
   };
 
-  environment.systemPackages = with pkgs; [
-    helvum
-    wireshark
-    # plasma
-    ark
-    kate
-    skanpage
-    filelight
-    kcalc
-    kcolorchooser
-    # apps
-    mpv
-    qbittorrent
-    teamspeak_client
-    discord
-    krita
-    # libreoffice
-    libreoffice-qt
-    hunspell
-    hunspellDicts.fr-moderne
-    hunspellDicts.en_US
-    # theming
-    papirus-icon-theme
-    # dev
-    git
-    jetbrains.idea-community
-    rustc
-    cargo
-    qemu
-  ];
+
+  environment = {
+    plasma5.excludePackages = with pkgs.libsForQt5; [
+      oxygen
+    ];
+
+    systemPackages = with pkgs; [
+      helvum
+      wireshark
+      # plasma
+      ark
+      kate
+      skanpage
+      filelight
+      kcalc
+      kcolorchooser
+      # apps
+      mpv
+      qbittorrent
+      teamspeak_client
+      discord
+      krita
+      # libreoffice
+      libreoffice-qt
+      hunspell
+      hunspellDicts.fr-moderne
+      hunspellDicts.en_US
+      # theming
+      papirus-icon-theme
+      # dev
+      git
+      jetbrains.idea-community
+      rustc
+      cargo
+      qemu
+    ];
+  };
 
   fonts.packages = with pkgs; [
     noto-fonts
