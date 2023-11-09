@@ -352,19 +352,12 @@
 
     # Installation manuelle des paquets
     environment.systemPackages = with pkgs; [
-      git
       libraspberrypi
       raspberrypi-eeprom
     ];
 
-    # Configuration des paquets
-
-    # git
-    programs.git.config = {
-      init.defaultBranch = "main";
-      user = {
-        name = user;
-        email = "julienm99@tutamail.com";
-      };
+    programs.git = {
+      enable = true;
+      package = pkgs.gitMinimal;
     };
   }
