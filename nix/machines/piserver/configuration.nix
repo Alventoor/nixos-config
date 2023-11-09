@@ -14,6 +14,8 @@
 
     domain_name = "jl-mc.duckdns.org";
 
+    vaultwarden_port = "8812";
+
   in {
     imports = [
       ../../modules/base.nix
@@ -231,18 +233,15 @@
       enable = true;
 
       config = {
-        signupsAllowed = false;
+        SIGNUPS_ALLOWED = false;
 
         # On change le port par défaut pour éviter des conflits
-        rocketPort = 8812;
-        rocketLog = "critical";
+        ROCKET_PORT = vaultwarden_port;
+        ROCKET_LOG = "critical";
 
-        websocketEnabled = true;
-        websocketAddress = "0.0.0.0";
-        websocketPort = 3012;
-
-        domain = "https://vaultwarden.${domain_name}";
+        DOMAIN = "https://vaultwarden.${domain_name}";
       };
+
       environmentFile = config.sops.secrets.vaultwarden_env.path;
     };
 
@@ -289,15 +288,10 @@
         enableACME = true;
 
         locations."/" = {
-          proxyPass = "http://localhost:8812";
-          proxyWebsockets = true;
+          proxyPass = "http://localhost:${vaultwarden_port}";
         };
         locations."/notifications/hub" = {
-          proxyPass = "http://localhost:3012";
-          proxyWebsockets = true;
-        };
-        locations."/notifications/hub/negotiate" = {
-          proxyPass = "http://localhost:8812";
+          proxyPass = "http://localhost:${vaultwarden_port}";
           proxyWebsockets = true;
         };
       };
