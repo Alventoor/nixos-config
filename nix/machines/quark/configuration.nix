@@ -151,8 +151,6 @@ in {
       # dev
       git
       jetbrains.idea-community
-      rustc
-      cargo
       qemu
     ];
   };
