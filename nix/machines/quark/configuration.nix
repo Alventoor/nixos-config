@@ -93,7 +93,8 @@ in {
 
     xserver = {
       displayManager.sddm.enable = true;
-      desktopManager.plasma5.enable = true;
+
+      desktopManager.plasma6.enable = true;
     };
 
     minecraft-server = {
@@ -122,9 +123,7 @@ in {
 
 
   environment = {
-    plasma5.excludePackages = with pkgs.libsForQt5; [
-      oxygen
-    ];
+    plasma6.excludePackages = [ pkgs.kdePackages.khelpcenter ];
 
     systemPackages = with pkgs; [
       helvum
