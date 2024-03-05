@@ -61,7 +61,12 @@ in {
     # Per-interface useDHCP will be mandatory in the future, so this generated config
     # replicates the default behaviour.
     useDHCP = false;
-    interfaces.enp0s2.useDHCP = true;
+
+    networkmanager = {
+      enable = true;
+
+      wifi.backend = "iwd";
+    };
   };
 
   users = {
