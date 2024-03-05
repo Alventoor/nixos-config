@@ -17,7 +17,7 @@ in {
 
   services.xserver = {
     enable = true;
-    layout = keyboard_layout;
+    xkb.layout = keyboard_layout;
   };
 
   services.pipewire = {
