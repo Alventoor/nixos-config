@@ -39,7 +39,7 @@
         allowReboot = true;
 
         flake = "path:/etc/nixos";
-        flags = [ "--update-input" "nixpkgs" "--update-input" "sops-nix" "--update-input" "nixos-hardware" "--commit-lock-file" ];
+        flags = [ "--update-input" "nixpkgs" "--update-input" "sops-nix" "--update-input" "nixos-hardware" ];
         dates = "*-*-15,28 03:30:00";
       };
 
