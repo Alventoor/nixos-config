@@ -101,9 +101,9 @@ in {
         enable = true;
         wayland.enable = true;
       };
-
-      desktopManager.plasma6.enable = true;
     };
+
+    desktopManager.plasma6.enable = true;
 
     minecraft-server = {
       enable = true;
