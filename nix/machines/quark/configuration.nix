@@ -114,8 +114,6 @@ in {
   };
 
   programs = {
-    # Don't work if enabled from environment.systemPackages
-    partition-manager.enable = true;
     java.enable = true;
 
     wireshark = {
@@ -136,12 +134,11 @@ in {
     systemPackages = with pkgs; [
       helvum
       # plasma
-      ark
-      kate
-      skanpage
-      filelight
-      kcalc
-      kcolorchooser
+      kdePackages.skanpage
+      kdePackages.filelight
+      kdePackages.kcalc
+      kdePackages.kcolorchooser
+      kdePackages.partitionmanager
       # apps
       mpv
       qbittorrent
