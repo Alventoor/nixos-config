@@ -9,6 +9,8 @@ let
   user = "alventoor";
   user_extraGroups = [ "gaming" "wireshark" ];
 
+  tmp_size = "24G";
+
 in {
   imports =
     [ # Include the results of the hardware scan.
@@ -48,6 +50,11 @@ in {
           }
         ];
       };
+    };
+
+    tmp = {
+      useTmpfs = true;
+      tmpfsSize = tmp_size;
     };
   };
 
