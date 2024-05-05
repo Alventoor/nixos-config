@@ -8,7 +8,7 @@ let
 in {
   nix = {
     package = pkgs.nixVersions.latest;
-    extraOptions = "experimental-features = nix-command flakes";
+    settings.experimental-features = [ "nix-command" "flakes" ];
   };
 
   systemd = {
