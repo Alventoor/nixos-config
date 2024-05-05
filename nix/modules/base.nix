@@ -7,8 +7,7 @@ let
 
 in {
   nix = {
-    # On utilise Nix unstable pour le support des flakes
-    package = pkgs.nixUnstable;
+    package = pkgs.nixVersions.latest;
     extraOptions = "experimental-features = nix-command flakes";
   };
 
