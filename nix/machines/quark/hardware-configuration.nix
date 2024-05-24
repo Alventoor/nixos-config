@@ -41,12 +41,6 @@
       options = [ "bind" ];
     };
 
-  fileSystems."/var/log" =
-    { device = "/nix/persist/var/log";
-      fsType = "none";
-      options = [ "bind" ];
-    };
-
   swapDevices = [ ];
 
   hardware.cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;

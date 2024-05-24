@@ -101,7 +101,7 @@ in {
 
   services = {
     fstrim.enable = true;
-    journald.extraConfig = "SystemMaxUse=1G";
+    journald.storage = "volatile";
 
     displayManager.sddm = {
       enable = true;
