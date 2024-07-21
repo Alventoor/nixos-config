@@ -72,11 +72,11 @@
         "rev": "fa9b327f95f260e9b95028edaf0e7206f7deae3c",
         "revCount": 6,
         "type": "git",
-        "url": "file://file:/etc/nixos/nix/private"
+        "url": "file:/etc/nixos/nix/private"
       },
       "original": {
         "type": "git",
-        "url": "file://file:/etc/nixos/nix/private"
+        "url": "file:/etc/nixos/nix/private"
       }
     },
     "root": {
