@@ -46,11 +46,16 @@
       stateVersion = "22.05";
     };
 
-    # Nettoie les anciens paquets après chaque upgrade
-    nix.gc = {
-      automatic = true;
-      dates = "*-*-15,28 05:30:00";
-      options = "--delete-older-than 30d";
+    nix = {
+      # Réduit l'espace disque utilisé par le store
+      settings.auto-optimise-store = true;
+
+      # Nettoie les anciens paquets après chaque upgrade
+      gc = {
+        automatic = true;
+        dates = "*-*-15,28 05:30:00";
+        options = "--delete-older-than 30d";
+      };
     };
 
     fileSystems = {
