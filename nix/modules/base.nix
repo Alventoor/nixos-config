@@ -48,5 +48,6 @@ in {
   programs.nano.nanorc = ''
     set tabstospaces
     set tabsize 2
+    set constantshow
   '';
 }
