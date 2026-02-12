@@ -19,7 +19,6 @@ in {
   i18n.defaultLocale = locale;
   time.timeZone = time_zone;
 
-  # Installation des paquets
   environment = {
     sessionVariables = {
       XDG_CACHE_HOME = "\${HOME}/.cache";
@@ -30,6 +29,7 @@ in {
 
     systemPackages = with pkgs; [
       # System
+      usbutils
       gotop
       vim
       # Network
