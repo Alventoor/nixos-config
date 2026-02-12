@@ -114,9 +114,12 @@
       # Désactive l'utilisateur root
       users.root.hashedPassword = "*";
 
-      users."${user}" = {
+      groups.${user} = {};
+
+      users.${user} = {
         isNormalUser = true;
         hashedPasswordFile = config.sops.secrets.alventoor_password.path;
+        group = user;
         extraGroups = [ "wheel" ];
       };
     };
