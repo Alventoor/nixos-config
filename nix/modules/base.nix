@@ -35,6 +35,8 @@ in {
       # Network
       bind # Pour la commande nslookup
       nmap
+      iperf
+      ethtool
       # Secrets
       sops
       ssh-to-age
