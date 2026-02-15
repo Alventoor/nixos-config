@@ -17,6 +17,7 @@
         sops-nix.nixosModules.sops
         # Ajoute le support des fonctionnalités spécifiques au Raspberry Pi 4
         nixos-hardware.nixosModules.raspberry-pi-4
+        private.nixosModules.piserver.samba-private-users
         # Fichier de configuration du système
         ./nix/machines/piserver/configuration.nix
       ];

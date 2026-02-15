@@ -20,7 +20,13 @@
     imports = [
       ../../modules/base.nix
       ../../modules/sshd.nix
+      ./samba-configuration.nix
     ];
+
+    _module.args.piSystem = {
+      ipv4Network = ipv4_network;
+      ipv6Network = ipv6_network;
+    };
 
     # Configuration des secrets
     sops = {
