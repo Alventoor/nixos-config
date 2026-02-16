@@ -20,6 +20,7 @@
     imports = [
       ../../modules/base.nix
       ../../modules/sshd.nix
+      ./hardware-configuration.nix
       ./samba-configuration.nix
     ];
 
