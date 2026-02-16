@@ -247,21 +247,65 @@ in {
 
       path = [pkgs.jq pkgs.samba4Full];
       script = ''
+        declare -A disabled_users
+
+        echo "Disabling exising samba users..."
+
+        previous_users=$(pdbedit -L)
+        while IFS= read -r user_data; do
+          username=$(echo "$user_data" | cut -d: -f1)
+
+          if [ -z "$username" ]; then
+            continue
+          fi
+
+          echo "Disabling user '$username'...".
+
+          smbpasswd -d "$username"
+          disabled_users["$username"]=true
+        done <<< "$previous_users"
+
+        echo "Samba users deactivation completed."
+        echo "Registering provided users..."
+
         users=$(jq -r 'keys[]' ${users_json_file})
+        while IFS= read -r user_id; do
+          username=$(jq -r ".[$user_id].name" ${users_json_file})
+          password_file=$(jq -r ".[$user_id].passwordFile" ${users_json_file})
+          password=$(cat $password_file)
 
-        while IFS= read -r userId; do
-          userName=$(jq -r ".[$userId].name" ${users_json_file})
-          passwordFile=$(jq -r ".[$userId].passwordFile" ${users_json_file})
-          password=$(cat $passwordFile)
+          if [ -z "$username" ]; then
+            continue
+          fi
 
-          echo "Creating samba user '$userName'..."
+          exit_status=0
+          # Using '||' prevents the non-zero exit status from reaching the shell, allowing the script to continue
+          # even when executed with 'set -e' (like systemd services)
+          smbpasswd -e "$username" &> /dev/null || exit_status=$?
 
-          #smbpasswd ask password twice
-          printf "$password\n$password\n" | smbpasswd -sa $userName
+          if [ $exit_status -eq 0 ]; then
+            echo "User '$username' found and re-enabled. Updating password."
+          else
+            echo "Creating new user '$username'..."
+          fi
 
-          status=$?
-          [ $status -eq 0 ] && echo "done"
+          # smbpasswd ask password twice
+          printf "$password\n$password\n" | smbpasswd -sa "$username"
+
+          exit_status=$?
+          [ $exit_status -eq 0 ] && unset disabled_users["$username"]
         done <<< "$users"
+
+        echo "Users registration completed."
+        echo "Deleting disabled users..."
+
+        for disabled_user in "''\${!disabled_users[@]}"; do
+          echo "Deleting user '$disabled_user'..."
+
+          smbpasswd -x "$disabled_user"
+        done
+
+        echo "Deletion of disabled users completed."
       '';
     };
 
