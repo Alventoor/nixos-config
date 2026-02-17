@@ -8,6 +8,8 @@ let
   partitionLabel = "TERRA_DAS";
   mountDirectory = "/mnt/das";
 
+  backupDirectory = "${mountDirectory}/backup";
+
 in {
   imports = [
     ../../modules/samba-server.nix
@@ -44,6 +46,8 @@ in {
         };
       };
     };
+
+    vaultwarden.backupDir = "${backupDirectory}/vaultwarden";
 
     snapper.configs = {
       samba = {
