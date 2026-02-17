@@ -35,12 +35,6 @@
       fsType = "ext4";
     };
 
-  fileSystems."/etc/nixos" =
-    { device = "/nix/persist/etc/nixos";
-      fsType = "none";
-      options = [ "bind" ];
-    };
-
   swapDevices = [ ];
 
   hardware.cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;

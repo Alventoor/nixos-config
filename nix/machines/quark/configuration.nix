@@ -23,7 +23,7 @@ in {
 
   sops = {
     defaultSopsFile = ./secrets.yaml;
-    age.sshKeyPaths = [ "/nix/persist/etc/ssh/ssh_host_ed25519_key" ];
+    age.sshKeyPaths = [ "${config.system.persistentDirectory}/etc/ssh/ssh_host_ed25519_key" ];
 
     secrets.alventoor_password = {
       neededForUsers = true;
@@ -88,15 +88,6 @@ in {
       extraGroups = [ "wheel" ] ++ user_extraGroups;
       hashedPasswordFile = config.sops.secrets.alventoor_password.path;
     };
-  };
-
-  environment.etc = {
-    "machine-id".source = "/nix/persist/etc/machine-id";
-
-    "ssh/ssh_host_rsa_key".source = "/nix/persist/etc/ssh/ssh_host_rsa_key";
-    "ssh/ssh_host_rsa_key.pub".source = "/nix/persist/etc/ssh/ssh_host_rsa_key.pub";
-    "ssh/ssh_host_ed25519_key".source = "/nix/persist/etc/ssh/ssh_host_ed25519_key";
-    "ssh/ssh_host_ed25519_key.pub".source = "/nix/persist/etc/ssh/ssh_host_ed25519_key.pub";
   };
 
   services = {

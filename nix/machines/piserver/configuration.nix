@@ -12,6 +12,8 @@
     ipv6_network = "2a01:e0a:5ac:f010::";
     ipv6_address = "2a01:e0a:5ac:f010:fcf8:a089:fa3c:2582";
 
+    unbound_roothints = "${config.system.persistentDirectory}/etc/unbound/root.hints";
+
     domain_name = "jl-mc.duckdns.org";
 
     vaultwarden_port = "8812";
@@ -32,7 +34,7 @@
     # Configuration des secrets
     sops = {
       defaultSopsFile = ./secrets.yaml;
-      age.sshKeyPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
+      age.sshKeyPaths = [ "${config.system.persistentDirectory}/etc/ssh/ssh_host_ed25519_key" ];
 
       secrets.duckdns_credentials = {};
       secrets.vaultwarden_env = {};
@@ -197,7 +199,7 @@
           ];
 
           # Emplacement du fichier contenant les infos sur les serveurs DNS roots
-          root-hints = "/etc/unbound/root.hints";
+          root-hints = unbound_roothints;
         };
       };
     };
@@ -217,7 +219,7 @@
 
       path = [ pkgs.curl ];
       script = ''
-        curl -o /etc/unbound/root.hints https://www.internic.net/domain/named.cache
+        curl -o ${unbound_roothints} https://www.internic.net/domain/named.cache
         systemctl restart unbound
       '';
     };
