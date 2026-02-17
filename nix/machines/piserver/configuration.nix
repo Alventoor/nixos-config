@@ -23,7 +23,7 @@
       ../../modules/base.nix
       ../../modules/sshd.nix
       ./hardware-configuration.nix
-      ./samba-configuration.nix
+      ./das-configuration.nix
     ];
 
     _module.args.piSystem = {
