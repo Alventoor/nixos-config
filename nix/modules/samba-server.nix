@@ -3,7 +3,6 @@
 let
   cfg = config.services.samba-server;
 
-  default_server_directory = "/srv/samba";
   guest_user = "guest";
 
   users_json = builtins.toJSON (cfg.users ++ lib.optional cfg.remoteShare.remoteUser.enable
@@ -25,7 +24,7 @@ in {
 
       directory = lib.mkOption {
         type = lib.types.str;
-        default = default_server_directory;
+        default = "/srv/samba";
         description = lib.mdDoc ''
           The directory containing the different samba shares.
         '';
