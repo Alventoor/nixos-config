@@ -205,8 +205,16 @@
     # Service chargé de mettre automatiquement à jour root.hints
     systemd.services.update-roothints = {
       description = "Update root.hints file for Unbound";
-      serviceConfig.Type = "oneshot";
       after = [ "network.target" ];
+
+      serviceConfig = {
+        Type = "oneshot";
+        Restart = "on-failure";
+        RestartSec = "30m";
+        RestartSteps = 4;
+        RestartMaxDelaySec = "1d";
+      };
+
       path = [ pkgs.curl ];
       script = ''
         curl -o /etc/unbound/root.hints https://www.internic.net/domain/named.cache
