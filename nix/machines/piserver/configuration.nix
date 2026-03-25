@@ -77,7 +77,10 @@
 
     # Augmente la taille du buffer des requêtes UDP
     # Cela évite de perdre des messages lors des pics de trafic
-    boot.kernel.sysctl = { "net.core.rmem_max" = 1048576; };
+    boot.kernel.sysctl = {
+      "net.core.rmem_max" = 4194304;
+      "net.core.wmem_max" = 4194304;
+    };
 
     networking = {
       hostName = hostname;
