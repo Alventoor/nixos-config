@@ -114,7 +114,7 @@ in {
 
     wireshark = {
       enable = true;
-      package = pkgs.wireshark-qt;
+      package = pkgs.wireshark;
     };
 
     steam = {
@@ -128,7 +128,7 @@ in {
     plasma6.excludePackages = [ pkgs.kdePackages.khelpcenter ];
 
     systemPackages = with pkgs; [
-      helvum
+      crosspipe
       # plasma
       kdePackages.skanpage
       kdePackages.filelight
@@ -138,7 +138,6 @@ in {
       # apps
       mpv
       qbittorrent
-      teamspeak_client
       discord
       krita
       # libreoffice
@@ -150,15 +149,15 @@ in {
       papirus-icon-theme
       # dev
       git
-      jetbrains.idea-community
+      jetbrains.idea-oss
       qemu
     ];
   };
 
   fonts.packages = with pkgs; [
     noto-fonts
-    noto-fonts-cjk
-    noto-fonts-emoji
+    noto-fonts-cjk-sans
+    noto-fonts-color-emoji
     hack-font
   ];
 
