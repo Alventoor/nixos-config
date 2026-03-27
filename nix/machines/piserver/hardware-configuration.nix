@@ -1,63 +1,32 @@
 {config, ...}:
 
-let
-  pi_version = "4";
+{
+  boot.loader.raspberry-pi.bootloader = "kernel";
 
-in {
-  hardware = {
-    raspberry-pi.${pi_version}.apply-overlays-dtmerge.enable = true;
+  hardware.raspberry-pi.config = {
+    all = {
+      dt-overlays = {
+        disable-bt-pi5 = {
+          enable = true;
+        };
 
-    deviceTree = {
-      enable = true;
-      filter = "bcm2711-rpi-4-b.dtb";
+        disable-wifi-pi5 = {
+          enable = true;
+        };
+      };
+    };
+  };
 
-      # From the overlays at https://github.com/raspberrypi/linux/<..>/arch/arm/boot/dts/overlays
-      overlays = [
-        # Based on disable-wifi-overlays.dts
-        {
-          name = "disable-wifi";
-          dtsText = ''
-            /dts-v1/;
-            /plugin/;
-            /{
-                compatible = "brcm,bcm2711";
+  fileSystems = {
+    "/" = {
+      device = "/dev/disk/by-label/NIXOS_SD";
+      fsType = "ext4";
+      options = [ "noatime" ];
+    };
 
-                fragment@0 {
-                    target = <&mmc>;
-                    __overlay__ {
-                        status = "disabled";
-                    };
-                };
-
-                fragment@1 {
-                    target = <&mmcnr>;
-                    __overlay__ {
-                        status = "disabled";
-                    };
-                };
-            };
-          '';
-        }
-
-        # Based on disable-bt-overlays.dts
-        {
-          name = "disable-bt";
-          dtsText = ''
-            /dts-v1/;
-            /plugin/;
-            /{
-                compatible = "brcm,bcm2711";
-
-                fragment@0 {
-                    target = <&bt>;
-                    __overlay__ {
-                        status = "disabled";
-                    };
-                };
-            };
-          '';
-        }
-      ];
+    "/boot/firmware" = {
+      device = "/dev/disk/by-label/FIRMWARE";
+      fsType = "vfat";
     };
   };
 }

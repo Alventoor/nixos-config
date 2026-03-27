@@ -48,7 +48,7 @@
         allowReboot = true;
 
         flake = "path:/etc/nixos";
-        flags = [ "--update-input" "nixpkgs" "--update-input" "sops-nix" "--update-input" "nixos-hardware" ];
+        flags = [ "--update-input" "nixpkgs" "--update-input" "sops-nix" "--update-input" "nixos-raspberrypi" ];
         dates = "*-*-15,28 03:30:00";
       };
 
@@ -64,14 +64,6 @@
         automatic = true;
         dates = "*-*-15,28 05:30:00";
         options = "--delete-older-than 30d";
-      };
-    };
-
-    fileSystems = {
-      "/" = {
-        device = "/dev/disk/by-label/NIXOS_SD";
-        fsType = "ext4";
-        options = [ "noatime" ];
       };
     };
 
