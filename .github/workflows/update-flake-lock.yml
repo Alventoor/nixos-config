@@ -19,7 +19,7 @@ jobs:
       - name: Update flake.lock
         uses: DeterminateSystems/update-flake-lock@v21
         with:
-          inputs: nixpkgs sops-nix nixos-hardware
+          inputs: nixpkgs sops-nix nixos-raspberrypi
           token: ${{ secrets.GH_TOKEN_FLAKE_UPDATES }}
           pr-title: "Update flake.lock"
           pr-labels: |
