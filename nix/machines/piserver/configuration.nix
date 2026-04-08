@@ -368,6 +368,7 @@
     environment.systemPackages = with pkgs; [
       libraspberrypi
       raspberrypi-eeprom
+      cryptsetup
     ];
 
     programs.git = {
