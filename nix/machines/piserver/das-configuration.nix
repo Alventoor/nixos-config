@@ -50,7 +50,7 @@ in {
     vaultwarden.backupDir = "${backupDirectory}/vaultwarden";
 
     snapper.configs = {
-      samba = {
+      das = {
         SUBVOLUME = mountDirectory;
         FSTYPE = "btrfs";
         TIMELINE_CREATE = true;
