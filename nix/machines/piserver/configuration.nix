@@ -9,8 +9,8 @@
     ipv4_network = "192.168.1.0";
     ipv4_address = "192.168.1.202";
     ipv4_gateway = "192.168.1.254";
-    ipv6_network = "2a01:e0a:5ac:f010::";
-    ipv6_address = "2a01:e0a:5ac:f010:fcf8:a089:fa3c:2582";
+    ipv6_network = "2a01:e0a:a9e:1000::";
+    ipv6_address = "2a01:e0a:a9e:1000:fcf8:a089:fa3c:2582";
 
     unbound_roothints = "${config.system.persistentDirectory}/etc/unbound/root.hints";
 
