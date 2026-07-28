@@ -16,6 +16,9 @@
 
     domain_name = "jl-mc.duckdns.org";
 
+    gitea_port = "3000";
+    gitea_domain_name = "gitea.${domain_name}";
+
     vaultwarden_port = "8812";
 
   in {
@@ -248,21 +251,32 @@
       };
     };
 
-    # Mise en place du service Vaultwarden
-    services.vaultwarden = {
-      enable = true;
+    services = {
+      # Mise en place du service Vaultwarden
+      vaultwarden = {
+        enable = true;
 
-      config = {
-        SIGNUPS_ALLOWED = false;
+        config = {
+          SIGNUPS_ALLOWED = false;
 
-        # On change le port par défaut pour éviter des conflits
-        ROCKET_PORT = vaultwarden_port;
-        ROCKET_LOG = "critical";
+          # On change le port par défaut pour éviter des conflits
+          ROCKET_PORT = vaultwarden_port;
+          ROCKET_LOG = "critical";
 
-        DOMAIN = "https://vaultwarden.${domain_name}";
+          DOMAIN = "https://vaultwarden.${domain_name}";
+        };
+
+        environmentFile = config.sops.secrets.vaultwarden_env.path;
       };
 
-      environmentFile = config.sops.secrets.vaultwarden_env.path;
+      gitea = {
+        enable = true;
+
+        settings = {
+          service.DISABLE_REGISTRATION = true;
+          server.ROOT_URL = "https://${gitea_domain_name}";
+        };
+      };
     };
 
     # Génération des certificats de sécurités pour le nom de domaine
@@ -273,7 +287,7 @@
       certs."${domain_name}" = {
         group = "vaultwarden";
 
-        extraDomainNames = [ "vaultwarden.${domain_name}" ];
+        extraDomainNames = [ "vaultwarden.${domain_name}" gitea_domain_name ];
 
         dnsProvider = "duckdns";
         webroot = null;
@@ -292,27 +306,39 @@
       recommendedProxySettings = true;
       recommendedTlsSettings = true;
 
-      # Empêche d'accéder au site web depuis les adresses non désirées
-      virtualHosts."${domain_name}" = {
-        default = true;
+      virtualHosts = {
+        # Empêche d'accéder au site web depuis les adresses non désirées
+        "${domain_name}" = {
+          default = true;
 
-        forceSSL = true;
-        enableACME = true;
+          forceSSL = true;
+          enableACME = true;
 
-        locations."/".return = "403";
-      };
-
-      # Redirige les utilisateurs vers le service vaultwarden
-      virtualHosts."vaultwarden.${domain_name}" = {
-        forceSSL = true;
-        enableACME = true;
-
-        locations."/" = {
-          proxyPass = "http://localhost:${vaultwarden_port}";
+          locations."/".return = "403";
         };
-        locations."/notifications/hub" = {
-          proxyPass = "http://localhost:${vaultwarden_port}";
-          proxyWebsockets = true;
+
+        # Redirige les utilisateurs vers le service vaultwarden
+        "vaultwarden.${domain_name}" = {
+          forceSSL = true;
+          enableACME = true;
+
+          locations."/" = {
+            proxyPass = "http://localhost:${vaultwarden_port}";
+          };
+          locations."/notifications/hub" = {
+            proxyPass = "http://localhost:${vaultwarden_port}";
+            proxyWebsockets = true;
+          };
+        };
+
+        # Redirige les utilisateurs vers le service gitea
+        "${gitea_domain_name}" = {
+          forceSSL = true;
+          enableACME = true;
+
+          locations."/" = {
+            proxyPass = "http://localhost:${gitea_port}";
+          };
         };
       };
     };
@@ -321,7 +347,6 @@
     services.fail2ban = {
       enable = true;
 
-      # Protection du service vaultwarden
       jails = {
         vaultwarden = ''
           enabled = true
@@ -336,11 +361,18 @@
           filter = vaultwarden-admin
           journalmatch = _SYSTEMD_UNIT=vaultwarden.service + _COMM=vaultwarden
         '';
+
+        gitea = ''
+          enabled = true
+          port = 80,443
+          filter = gitea
+          journalmatch = _SYSTEMD_UNIT=gitea.service + _COMM=gitea
+        '';
       };
     };
 
-    # Filtres fail2ban pour le service vaultwarden
     environment.etc = {
+      # Filtres fail2ban pour le service vaultwarden
       "fail2ban/filter.d/vaultwarden.local" = {
         text = ''
           [INCLUDES]
@@ -359,6 +391,17 @@
 
           [Definition]
           failregex = ^.*Invalid admin token\. IP: <ADDR>.*$
+          ignoreregex =
+        '';
+      };
+
+      "fail2ban/filter.d/gitea.local" = {
+        text = ''
+          [INCLUDES]
+          before = common.conf
+
+          [Definition]
+          failregex =  .*(Failed authentication attempt|invalid credentials|Attempted access of unknown user).* from <HOST>
           ignoreregex =
         '';
       };

@@ -56,6 +56,8 @@ in {
 
       vaultwarden.backupDir = "${backupDirectory}/vaultwarden";
 
+      gitea.stateDir = "${cfg.mountDirectory}/gitea";
+
       snapper.configs = {
         das = {
           SUBVOLUME = cfg.mountDirectory;
