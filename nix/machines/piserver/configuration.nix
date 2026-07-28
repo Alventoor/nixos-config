@@ -321,7 +321,9 @@
           enableACME = true;
 
           locations."/" = {
-            proxyPass = "http://localhost:${vaultwarden_port}";
+            # In 1.37, Vaultwarden still only listen on IPv4 connections
+            # So we specify directly the IPv4 loopback address instead of localhost
+            proxyPass = "http://127.0.0.1:${vaultwarden_port}";
             proxyWebsockets = true;
           };
         };
