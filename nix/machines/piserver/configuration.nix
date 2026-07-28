@@ -324,9 +324,6 @@
 
           locations."/" = {
             proxyPass = "http://localhost:${vaultwarden_port}";
-          };
-          locations."/notifications/hub" = {
-            proxyPass = "http://localhost:${vaultwarden_port}";
             proxyWebsockets = true;
           };
         };
