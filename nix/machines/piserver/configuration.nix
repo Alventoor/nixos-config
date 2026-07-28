@@ -335,6 +335,7 @@
 
           locations."/" = {
             proxyPass = "http://localhost:${gitea_port}";
+            extraConfig = "client_max_body_size 0;";
           };
         };
       };
