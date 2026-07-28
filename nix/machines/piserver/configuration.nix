@@ -20,6 +20,7 @@
     gitea_domain_name = "gitea.${domain_name}";
 
     vaultwarden_port = "8812";
+    vaultwarden_domain_name = "vaultwarden.${domain_name}";
 
   in {
     imports = [
@@ -263,7 +264,7 @@
           ROCKET_PORT = vaultwarden_port;
           ROCKET_LOG = "critical";
 
-          DOMAIN = "https://vaultwarden.${domain_name}";
+          DOMAIN = "https://${vaultwarden_domain_name}";
         };
 
         environmentFile = config.sops.secrets.vaultwarden_env.path;
@@ -285,7 +286,7 @@
       defaults.email = "julienm99@tutamail.com";
 
       certs."${domain_name}" = {
-        extraDomainNames = [ "vaultwarden.${domain_name}" gitea_domain_name ];
+        extraDomainNames = [ vaultwarden_domain_name gitea_domain_name ];
 
         dnsProvider = "duckdns";
         webroot = null;
@@ -315,7 +316,7 @@
         };
 
         # Redirige les utilisateurs vers le service vaultwarden
-        "vaultwarden.${domain_name}" = {
+        "${vaultwarden_domain_name}" = {
           forceSSL = true;
           enableACME = true;
 
