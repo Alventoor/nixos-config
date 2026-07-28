@@ -285,8 +285,6 @@
       defaults.email = "julienm99@tutamail.com";
 
       certs."${domain_name}" = {
-        group = "vaultwarden";
-
         extraDomainNames = [ "vaultwarden.${domain_name}" gitea_domain_name ];
 
         dnsProvider = "duckdns";
@@ -297,7 +295,6 @@
 
     # Mise en place d'un reverse proxy chargé de rediriger les connexions entrantes
     # ver le serveur web
-    users.users.nginx.extraGroups = [ "vaultwarden" ];
     services.nginx = {
       enable = true;
 
