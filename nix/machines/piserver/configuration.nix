@@ -290,7 +290,7 @@
 
         dnsProvider = "duckdns";
         webroot = null;
-        credentialsFile = config.sops.secrets.duckdns_credentials.path;
+        environmentFile = config.sops.secrets.duckdns_credentials.path;
       };
     };
 
