@@ -26,7 +26,6 @@
         sops-nix.nixosModules.sops
         # Ajoute le support des fonctionnalités spécifiques au Raspberry Pi 5
         nixos-raspberrypi.nixosModules.raspberry-pi-5.base
-        nixos-raspberrypi.nixosModules.raspberry-pi-5.page-size-16k
         private.nixosModules.piserver.das-encryption
         private.nixosModules.piserver.samba-private-users
         # Fichier de configuration du système
