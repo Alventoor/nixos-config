@@ -51,7 +51,7 @@ in {
       systemPackages = with pkgs; [
         # System
         usbutils
-        gotop
+        btop
         vim
         # Network
         bind # Pour la commande nslookup
