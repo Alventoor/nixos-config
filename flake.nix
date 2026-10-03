@@ -3,6 +3,8 @@
     nixpkgs.url = github:nixos/nixpkgs/nixos-unstable;
 
     sops-nix.url = github:Mic92/sops-nix;
+    sops-nix.inputs.nixpkgs.follows = "nixpkgs";
+
     nixos-raspberrypi.url = github:nvmd/nixos-raspberrypi/develop;
 
     private.url = git+file:/etc/nixos/nix/private;
