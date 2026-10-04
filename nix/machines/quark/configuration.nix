@@ -149,7 +149,7 @@ in {
       papirus-icon-theme
       # dev
       git
-      jetbrains.idea-oss
+      jetbrains.idea
       qemu
     ];
   };
