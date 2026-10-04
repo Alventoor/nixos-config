@@ -15,10 +15,7 @@ in {
     drivers = [ pkgs.hplip ];
   };
 
-  services.xserver = {
-    enable = true;
-    xkb.layout = keyboard_layout;
-  };
+  services.xserver.xkb.layout = keyboard_layout;
 
   services.pipewire = {
     enable = true;
