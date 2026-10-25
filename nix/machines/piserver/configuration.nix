@@ -286,8 +286,6 @@
       defaults.email = "julienm99@tutamail.com";
 
       certs."${domain_name}" = {
-        extraDomainNames = [ vaultwarden_domain_name gitea_domain_name ];
-
         dnsProvider = "duckdns";
         webroot = null;
         environmentFile = config.sops.secrets.duckdns_credentials.path;
