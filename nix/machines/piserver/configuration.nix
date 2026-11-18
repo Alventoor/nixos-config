@@ -22,6 +22,10 @@
     vaultwarden_port = "8812";
     vaultwarden_domain_name = "vaultwarden.${domain_name}";
 
+    flatpak_repo_domain_name = "flatpak.${domain_name}";
+    flatpak_repo_user = "flatpak";
+    flatpak_repo_directory = "/srv/flatpak-repo";
+
   in {
     imports = [
       ../../modules/base.nix
@@ -33,6 +37,8 @@
     _module.args.piSystem = {
       ipv4Network = ipv4_network;
       ipv6Network = ipv6_network;
+
+      flatpakRepository.directory = flatpak_repo_directory;
     };
 
     # Configuration des secrets
@@ -122,13 +128,28 @@
       # Désactive l'utilisateur root
       users.root.hashedPassword = "*";
 
-      groups.${user} = {};
+      groups = {
+        ${user} = {};
+        ${flatpak_repo_user} = {};
+      };
 
-      users.${user} = {
-        isNormalUser = true;
-        hashedPasswordFile = config.sops.secrets.alventoor_password.path;
-        group = user;
-        extraGroups = [ "wheel" ];
+      users = {
+        ${user} = {
+          isNormalUser = true;
+          hashedPasswordFile = config.sops.secrets.alventoor_password.path;
+          group = user;
+          extraGroups = [ "wheel" ];
+        };
+
+        ${flatpak_repo_user} = {
+          isSystemUser = true;
+          useDefaultShell = true;
+          group = flatpak_repo_user;
+
+          openssh.authorizedKeys.keys = [
+            ''command="${pkgs.rrsync}/bin/rrsync ${flatpak_repo_directory}",restrict ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIP2e3OhwVayw7SPo0ISqNdb4kzM+SO0/ALrVjMm3+NXl''
+          ];
+        };
       };
     };
 
@@ -335,6 +356,13 @@
             proxyPass = "http://localhost:${gitea_port}";
             extraConfig = "client_max_body_size 0;";
           };
+        };
+
+        "${flatpak_repo_domain_name}" = {
+          forceSSL = true;
+          enableACME = true;
+
+          locations."/".root = flatpak_repo_directory;
         };
       };
     };

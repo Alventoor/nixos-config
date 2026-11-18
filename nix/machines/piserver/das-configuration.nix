@@ -37,6 +37,12 @@ in {
         fsType = "none";
         options = [ "bind" ];
       };
+
+      ${piSystem.flatpakRepository.directory} = {
+        device = "${cfg.mountDirectory}/flatpak-repo";
+        fsType = "none";
+        options = [ "bind" ];
+      };
     };
 
     services = {
