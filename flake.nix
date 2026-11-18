@@ -5,7 +5,7 @@
     sops-nix.url = github:Mic92/sops-nix;
     sops-nix.inputs.nixpkgs.follows = "nixpkgs";
 
-    nixos-raspberrypi.url = github:nvmd/nixos-raspberrypi/develop;
+    nixos-raspberrypi.url = github:nvmd/nixos-raspberrypi/main;
 
     private.url = git+file:/etc/nixos/nix/private;
   };
